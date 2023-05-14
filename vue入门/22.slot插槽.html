@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <ul>
+      slot插槽是Vue.js中的一个特性，它可以让我们在组件中插入自定义的模板内容。slot插槽有以下几种类型：
+      <li>
+        默认插槽：当没有指定插槽名字时，使用&lt;slot>&lt;/slot>标签定义的插槽，可以接收任何没有指定插槽名字的模板内容。
+      </li>
+      <li>
+        具名插槽：当指定了插槽名字时，使用&lt;slot
+        name="xxx">&lt;/slot>标签定义的插槽，可以接收指定了相同名字的模板内容，例如&lt;template
+        v-slot:"xxx">&lt;/template>。
+      </li>
+      <li>
+        作用域插槽：当需要在插槽中使用子组件的数据时，使用&lt;slot
+        :xxx="yyy">&lt;/slot>标签定义的插槽，可以接收一个函数作为模板内容，函数的参数就是子组件传递的数据，例如&lt;template
+        v-slot:default="props">&lt;/template>。
+      </li>
+    </ul>
+    <ul>
+      slot插槽的好处是可以让我们复用组件，同时保持组件的灵活性和可定制性。slot插槽的使用场景有很多，例如：
+      <li>
+        在卡片组件中使用不同的插槽来显示不同的内容，如标题、正文、底部等。
+      </li>
+      <li>在导航栏组件中使用不同的插槽来显示不同的菜单项、图标、徽章等。</li>
+      <li>在对话框组件中使用不同的插槽来显示不同的标题、内容、按钮等。</li>
+    </ul>
+    <div id="插槽示例">
+      <card>
+        <div>card组件内包括的内容,就是默认插槽的内容</div>
+        <button>可以包含任意东西</button>
+        <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+        </ul>
+      </card>
+      <multi-slot>
+        <template v-slot:header>
+          <h1 class="alert alert-dark">插槽1的内容</h1>
+        </template>
+        <template v-slot:main>
+          <button class="btn btn-danger">插槽2的内容</button>
+          <button class="btn btn-info">插槽2的内容</button>
+          <button class="btn btn-secondary">插槽2的内容</button>
+          <button class="btn btn-light">插槽2的内容</button>
+        </template>
+        <template v-slot:footer>
+          <select class="form-select">
+            <option>插槽3的内容</option>
+            <option>插槽3的内容</option>
+            <option>插槽3的内容</option>
+          </select>
+        </template>
+      </multi-slot>
+      <lists-data :arrery="lists">
+        <!-- v-slot 直接接收参数 对象数据，数据直接结构 -->
+        <template v-slot="{info,i}">
+          <h3 v-if="info=='B'">{{info}}--{{i}}</h3>
+          <span v-else>{{info}}--{{i}}</span>
+        </template>
+      </lists-data>
+    </div>
+    <script>
+      new Vue({
+        el: "#插槽示例",
+        data: {
+          lists: ["A", "B", "C", "D", "E", "F"],
+        },
+        components: {
+          card: {
+            template: `<div class="alert alert-info">
+                        <slot></slot><!--默认插槽-->
+                      </div>`,
+          },
+          multiSlot: {
+            template: `<ul class="list-group">
+        <li class="list-group-item">具名插槽1:<slot name="header"></slot></li>
+        <li class="list-group-item">具名插槽2:<slot name="main"></slot></li>
+        <li class="list-group-item">具名插槽3:<slot name="footer"></slot></li>
+                    </ul>`,
+          },
+          listsData: {
+            props: ["arrery"],
+            template: `<ul><li v-for="item,index in arrery" :key="index">
+                        <slot :info="item" :i="index">{{item}}</slot>
+                      </li></ul>
+            `,
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.6.5/vue-router.min.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <ul class="list-group">
+      <li class="list-group-item">
+        **params传参**：在路由配置中使用`/:id`来定义参数，然后在跳转时使用`this.$router.push({path:'/article/'+id})`或者`this.$router.push({name:'article',params:{id}})`来传递参数，接收时使用`this.$route.params.id`来获取参数。这种方式可以在url中显示或隐藏参数。
+      </li>
+      <li class="list-group-item">
+        **query传参**：在跳转时使用`this.$router.push({path:'/article',query:{id}})`来传递参数，接收时使用`this.$route.query.id`来获取参数。这种方式会在url中显示参数，类似于get请求的形式。
+      </li>
+      <li class="list-group-item">
+        **props传参**：在路由配置中使用`props:true`来开启props传参，然后在跳转时使用params或query的方式来传递参数，接收时使用props属性来获取参数。这种方式可以让组件和路由解耦，不需要依赖于`this.$route`对象。
+      </li>
+    </ul>
+    <div class="container" id="路由标签传参示例">
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <ul class="nav nav-tabs">
+            <!-- 1.带参数路由传参 -->
+            <li class="nav-item">
+              <router-link
+                class="nav-link"
+                to="/page1?u_name=张三&psword=123456">
+                传参页面1
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/page2/李四/123456"
+                >传参页面2</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/">传参作用</router-link>
+            </li>
+          </ul>
+          <!-- 路由视图 -->
+          <router-view></router-view>
+        </div>
+      </div>
+    </div>
+    <script>
+      let vm = new Vue({
+        el: "#路由标签传参示例",
+        router: new VueRouter({
+          routes: [
+            {
+              path: "/",
+              component: {
+                template: `<div class="alert alert-primary">路由组件传参,可以用从上一个页面跳转进来的数据渲染新页面.
+                  </br>例如:在歌曲列表页点击后,页面切换至新的歌曲详情路由视图(复用的一样的模板),但根据切换进来时,组件传入的参,渲染不同的歌曲:</div>`,
+              },
+            },
+            {
+              path: "/page1",
+              component: {
+                template: `<div class="alert alert-info">用户名 : {{$route.query.u_name}}
+                  </br>用户名 : {{$route.query.psword}}
+                  </br>在路由组件router-link标签中,to属性可以写为"/page1?u_name=张三&psword=123456",从而传参</div>`,
+                // 生命周期钩子
+                created() {
+                  console.log(this);
+                  // $route 获取链接数据
+                  // $router 实例化路由对象
+                  // 带参数数据路由参数 query取值
+                  console.log(this.$route.query.u_name);
+                  console.log(this.$route.query.psword);
+                },
+              },
+            },
+            {
+              path: "/page2/:u_name/:psword",
+              component: {
+                template: `<div class="alert alert-success">用户名 : {{$route.params.u_name}}
+                  </br>用户名 : {{$route.params.psword}}
+                  </br>也可在定于路由时,在path参数中预定义参数列表,用":"符号表示预定于参数,用"/"符号分隔.例如 path:"/page2/:u_name/:psword",然后路由组件标签内写 to="/page2/李四/123456"
+                  </div>`,
+                created() {
+                  console.log(this);
+                  // 命名路由获取 params获取
+                  console.log(this.$route.params.u_name);
+                  console.log(this.$route.params.psword);
+                },
+              },
+            },
+          ],
+          linkExactActiveClass: "active",
+        }),
+      });
+    </script>
+  </body>
+</html>

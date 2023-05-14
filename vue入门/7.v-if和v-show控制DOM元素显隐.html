@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>7.v-if和v-show控制DOM元素显隐</title>
+    <style>
+      .fadein {
+        animation: fadein 0.5s linear;
+      }
+      @keyframes fadein {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="app" class="row">
+        <div class="col-12">
+          <div class="alert alert-info" v-html="text1"></div>
+          <div v-if="1+1==2">内容</div>
+          <div v-if="1+1==3">内容</div>
+          <div v-show="1+1==3">内容</div>
+          <div v-show="1+1==3">内容</div>
+        </div>
+      </div>
+      <!-- 选项卡案例 -->
+      <div id="选项卡" class="row">
+        <!-- 第一个bootstrap5选项卡 -->
+        <div class="col-12">
+          <ul class="nav nav-tabs">
+            <li v-for="item,index in con_data" class="nav-item">
+              <a
+                class="nav-link"
+                :class="{'active':(index==0)}"
+                data-bs-toggle="tab"
+                :href="`#${item.title}`"
+                >{{item.title}}</a
+              >
+            </li>
+          </ul>
+          <div class="tab-content alert alert-dark rounded-top-0">
+            <div
+              v-for="item,index in con_data"
+              class="tab-pane fade"
+              :class="{'active show':(index==0)}"
+              :id="item.title">
+              {{item.con}}
+            </div>
+          </div>
+        </div>
+        <!-- 第二个VUE选项卡 -->
+        <div class="col-12">
+          <ul class="d-flex ps-0 mb-0 border-bottom">
+            <li
+              v-for="item,index in con_data"
+              class="p-2 ps-3 pe-3 list-unstyled"
+              :class="{'border border-start rounded-top':(index==page)}"
+              @click="changePage(index)">
+              {{item.title}}
+            </li>
+          </ul>
+          <div
+            v-for="item,index in con_data"
+            class="alert alert-dark rounded-top-0"
+            :class="{'fadein':(index==page)}"
+            v-if="page == index">
+            {{item.con}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          text1: `
+<li>v-if是**条件渲染**，只有当条件为真时才会渲染元素，并且会销毁和重建元素.(会把元素从DOM树中整个删除,留下一个占位的注释节点)
+<li>v-show是**条件显示**，无论条件是否为真，元素都会被渲染并保留在DOM中，只是通过行内式的"display:none/block"改变元素的显示与否。
+<br/><br/>
+<li>一般来说，v-if有更高的**切换开销**，而v-show有更高的**初始渲染开销**。因此，如果需要非常频繁地切换，则使用v-show较好；如果在运行时条件很少改变，则使用v-if较好`,
+        },
+        methods: {},
+      });
+      new Vue({
+        el: "#选项卡",
+        data: {
+          con_data: [
+            {
+              title: "Title1",
+              con: "内容1内容1内容1内容1内容1内容1内容1",
+            },
+            {
+              title: "Title2",
+              con: "内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2",
+            },
+            {
+              title: "Title3",
+              con: "内容3内容3内容3内容3内容3内容3内容3内容3内容3内容3内容3内容3内容3内容3内容3内容3",
+            },
+            {
+              title: "Title4",
+              con: "内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4",
+            },
+            {
+              title: "Title5",
+              con: "内容5内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4内容4",
+            },
+          ],
+          page: 1,
+        },
+        methods: {
+          changePage: function (index) {
+            this.page = index;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>4.v-on,DOM事件监听</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="alert alert-success" :class="{'d-none':alertHiddenFlag}">
+        vue中可以使用v-on:语法,在元素的行内属性中监听DOM事件.其可以简写为一个'@'符号.下方按钮均绑定了v-on:click="function()".
+        <br />v-on:绑定的事件不传入参数,则默认填入event事件对象参数;若需要在形参中指定事件对象,使用"$event"进行占位
+        <br />在vue实例对象中,this永远指向实例对象本身.哪怕是绑定的DOM事件监听.this也不会指向触发DOM事件的元素(需使用事件对象.target获取)
+        <br />计数器 : {{counter}}次
+      </div>
+      <button v-on:click="counter++" class="btn btn-outline-primary">
+        点我增加计数器
+      </button>
+      <button @click="counterIncrement" class="btn btn-outline-primary">
+        点我增加计数器
+      </button>
+      <button @click="counterIncrement()" class="btn btn-outline-primary">
+        点我增加计数器
+      </button>
+      <button @click="alertHidden" class="btn btn-outline-primary">
+        点我隐藏/显示上方alert文本框
+      </button>
+      <button @click="Output_argument1" class="btn btn-outline-primary">
+        输出:不传入参数时的实参列表(就一个事件对象)
+      </button>
+      <button
+        @click="Output_argument2('实参1','实参2')"
+        class="btn btn-outline-primary">
+        输出:主动传参时的参数列表
+      </button>
+      <button
+        @click="Output_argument3($event,'实参1','实参2')"
+        class="btn btn-outline-primary">
+        输出:使用占位符$event传入的事件对象,与主动传参时的参数列表
+      </button>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          counter: 0,
+          alertHiddenFlag: false,
+        },
+        methods: {
+          counterIncrement: function () {
+            this.counter += 1; //vue实例中存储的属性,在methods方法集中调用,必须添加'this.'
+          },
+          alertHidden: function () {
+            this.alertHiddenFlag = !this.alertHiddenFlag;
+          },
+          Output_argument1: function () {
+            console.log(arguments);
+          },
+          Output_argument2: function (arg1, arg2) {
+            console.log(arguments);
+            console.log(arg1, arg2);
+          },
+          Output_argument3: function (e, arg1, arg2) {
+            console.log(arguments);
+            console.log(e);
+            console.log(arg1, arg2);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

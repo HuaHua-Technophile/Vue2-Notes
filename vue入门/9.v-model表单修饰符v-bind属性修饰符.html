@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>9.v-model表单修饰符v-bind属性修饰符</title>
+  </head>
+  <body>
+    <div class="container">
+      <div id="知识点" class="row">
+        <div class="alert alert-dark" v-html="html1"></div>
+        <form action="">
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="text"
+              v-model.number="num"
+              placeholder="v-model.number将输入转为Number类型" />
+            <input
+              class="form-control"
+              type="text"
+              v-model.trim="str"
+              placeholder="v-model.trim过滤首尾空格" />
+          </div>
+          <div class="d-flex">
+            <div class="col-6 alert alert-dark">
+              {{typeof num}}:<span class="border p-1">{{num}}</span>
+            </div>
+            <div class="col-6 alert alert-dark">
+              {{typeof str}}:<span class="border p-1">{{str}}</span>
+            </div>
+          </div>
+          <select class="form-select" v-model.lazy="select_val">
+            <option value="op1">op1</option>
+            <option value="op2">op2</option>
+            <option value="op3">op3</option>
+          </select>
+          <div class="alert alert-secondary">
+            v-model.lazy替代change事件,监听上方控件,获取的值是 : {{select_val}}
+          </div>
+          <input type="text" v-model.lazy="input_val" />
+          <div class="alert alert-secondary">
+            v-model.lazy替代change事件,监听上方控件失去焦点或回车时的值是 :
+            {{input_val}}
+          </div>
+          <input
+            type="radio"
+            name="radio_group"
+            class="form-check-input"
+            v-model.lazy="radio_val"
+            value="radio1" />
+          <input
+            type="radio"
+            name="radio_group"
+            class="form-check-input"
+            v-model.lazy="radio_val"
+            value="radio2" />
+          <input
+            type="radio"
+            name="radio_group"
+            class="form-check-input"
+            v-model.lazy="radio_val"
+            value="radio3" />
+          <div class="alert alert-secondary">
+            v-model.lazy替代change事件,监听上方控件值是 : {{radio_val}}
+          </div>
+          <input
+            type="checkbox"
+            class="form-check-input"
+            v-model.lazy="checkbox_val"
+            value="checkbox1" />
+          <div class="alert alert-secondary">
+            v-model.lazy替代change事件,监听上方控件值是 : {{checkbox_val}}
+          </div>
+        </form>
+        <!-- 通过 prop 修饰符绑定 DOM attribute -->
+        <div v-bind:text-content.prop="text"></div>
+        <!-- prop 绑定。“prop”必须在 my-component 中声明。-->
+        <my-component :prop="someThing"></my-component>
+        <!-- 通过 $props 将父组件的 props 一起传给子组件 -->
+        <child-component v-bind="$props"></child-component>
+      </div>
+    </div>
+  </body>
+  <script>
+    new Vue({
+      el: "#知识点",
+      data: {
+        num: null,
+        str: null,
+        select_val: null,
+        input_val: null,
+        radio_val: null,
+        checkbox_val: null,
+        html1: `
+    <li>**v-model表单修饰符**：用于处理表单输入的细节，例如".lazy"表示在失去焦点或回车时更新数据，".trim"表示过滤首尾空格，".number"表示将输入转为数字。
+    <li>**v-bind修饰符**：用于处理绑定属性的细节，例如".prop"表示绑定DOM的property,而不是元素的行内属性，".camel"表示将连字符形式的属性名转为驼峰形式，".sync"表示双向绑定数据（已废弃）`,
+      },
+    });
+  </script>
+</html>

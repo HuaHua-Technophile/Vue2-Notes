@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>5.v-model表单双向数据绑定</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="alert alert-dark">
+        v-model:用来在表单组件上实现双向绑定可以根据不同的元素类型，自动展开为不同的DOM属性和事件。
+        <br />在input和textarea元素上，v-model会展开为:value属性和@input事件
+        <br />在checkbox和radio元素上，v-model会展开为:checked属性和@change事件
+        <br />在select元素上，v-model会展开为:value属性和@change事件
+      </div>
+      <div class="input-group">
+        <input type="text" class="form-control" v-model="input1_val" />
+      </div>
+      <div class="alert alert-info">上方input框实时预览 : {{input1_val}}</div>
+      <div class="input-group">
+        <input type="number" class="form-control" v-model="num1" />
+        <select class="form-select" v-model="algorithm">
+          <option value="Add">加</option>
+          <option value="Reduce">减</option>
+          <option value="Multiply">乘</option>
+          <option value="Divide">除</option>
+        </select>
+        <input type="number" class="form-control" v-model="num2" />
+        <button class="btn btn-outline-primary ps-4 pe-4" @click="operation">
+          =
+        </button>
+        <span class="input-group-text w-25">{{result}}</span>
+      </div>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          input1_val: null,
+          result: null,
+          algorithm: "Add",
+          num1: 1,
+          num2: 1,
+        },
+        methods: {
+          operation: function () {
+            this.algorithm == "Add" &&
+              (this.result = this.num1 * 1 + this.num2 * 1);
+            this.algorithm == "Reduce" && (this.result = this.num1 - this.num2);
+            this.algorithm == "Multiply" &&
+              (this.result = this.num1 * this.num2);
+            this.algorithm == "Divide" && (this.result = this.num1 / this.num2);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

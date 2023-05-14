@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>17.VUE生命周期函数</title>
+  </head>
+  <body>
+    <p>
+      vue的生命周期可以简单分为四个阶段：创建阶段，挂载阶段，运行阶段，销毁阶段
+    </p>
+    <p>
+      所有的生命周期钩子自动绑定 this 上下文到实例中，因此你可以访问数据，对
+      property 和方法进行运算。这意味着你不能使用箭头函数来定义一个生命周期方法
+      (例如 created: () =>
+      this.fetchTodos())。这是因为箭头函数绑定了父上下文，因此 this 与你期待的
+      Vue 实例不同
+    </p>
+    <ul class="list-group">
+      <li class="list-group-item">
+        **创建阶段**：
+        <br />beforeCreate：是new
+        Vue()之后触发的第一个钩子，此时data、methods、computed以及watch上的数据和方法还未初始化，都不能被访问。
+        <div class="alert alert-dark">
+          在实例初始化之后，数据观测 (data observer) 和 event/watcher
+          事件配置之前被调用。
+        </div>
+        created：在实例创建完成后被立即调用，此时已完成以下的配置：数据观测
+        (data observer)，property 和方法的运算，watch/event
+        事件回调。然而，挂载阶段还没开始，$el property
+        目前尚不可用，也就是可以使用数据，更改数据，在这里更改数据不会触发updated函数
+        <ul class="alert alert-dark">
+          <li>
+            data和methods都已经被初始化好了，如果要调用methods中的方法，或者操作data中的数据，最早可以在这个阶段中操作。
+          </li>
+          <li>
+            无法与Dom进行交互，如果非要想，可以通过vm.$nextTick来访问Dom。
+          </li>
+          <li>异步数据的请求适合在 created 的钩子中使用，例如数据初始化。</li>
+        </ul>
+      </li>
+      <li class="list-group-item">
+        **挂载阶段**：
+        <br />beforeMount：发生在挂载之前，在这之前 template
+        模板已导入渲染函数编译。此时虚拟Dom已经创建完成，即将开始渲染。在这一阶段也可以对数据进行更改，不会触发updated。
+        <div class="alert alert-dark">
+          执行到这个钩子的时候，在内存中已经编译好了模板了，但是还没有挂载到页面中，此时，页面还是旧的。
+        </div>
+        mounted：在挂载完成后发生，此时真实的Dom挂载完毕，数据完成双向绑定，可以访问到Dom节点，使用$refs属性对Dom进行操作。
+        <div class="alert alert-dark">
+          执行到这个钩子的时候，就表示vue实例已经初始化完成了。此时组件脱离了创建阶段，进入到了运行阶段。如果我们想要通过插件操作页面上的DOM节点，最早可以在这个阶段中进行
+        </div>
+      </li>
+      <li class="list-group-item">
+        **运行阶段**：
+        <br />beforeUpdate：发生在更新之前，也就是响应式数据发生更新，虚拟dom重新渲染之前被触发，你可以在当前阶段进行更改数据，不会造成重新渲染,但会再次触发当前钩子函数(易导致死循环)
+        <div class="alert alert-dark">
+          此时实例中的数据已更新，但dom上的数据还未更新
+        </div>
+        <br />updated：发生在更新完成之后，此时Dom已经更新。现在可以执行依赖于DOM的操作。然而在大多数情况下，你应该避免在此期间更改状态。如果要相应状态改变，最好使用计算属性或watcher。最好不要在此期间更改数据，因为这可能会导致无限循环的更新。
+        <div class="alert alert-dark">
+          updated不会保证所有的子组件也都一起被重绘。如果你希望等到整个视图都重绘完毕，可以在updated里使用vm.$nextTick。
+        </div>
+      </li>
+      <li class="list-group-item">
+        **销毁阶段**：
+        <br />beforeDestroy：发生在实例销毁之前，在这期间实例完全可以被使用，我们可以在这时进行善后收尾工作，比如清除计时器
+        <div class="alert alert-dark">
+          Vue实例从运行阶段进入到了销毁阶段，这个时候上所有的data和methods，指令，过滤器……都是处于可用状态。还没有真正被销毁
+        </div>
+        <br />destroyed：发生在实例销毁之后，这个时候只剩下了dom空壳。组件已被拆解，数据绑定被卸除，事件监听器被移除，所有子实例也统统被销毁。
+        <div class="alert alert-dark">
+          在大多数场景中你不应该调用这个方法。最好使用v-if和v-for指令以数据驱动的方式控制子组件的生命周期。
+        </div>
+      </li>
+    </ul>
+    <ul class="list-group">
+      除了这八个主要的钩子函数外，还有一些其他的钩子函数，如：
+      <li class="list-group-item">
+        `activated`和`deactivated`：在keep-alive组件中使用，分别在组件被激活和失活时调用。
+      </li>
+      <li class="list-group-item">
+        `errorCaptured`：当捕获一个来自子孙组件的错误时被调用
+      </li>
+      <li class="list-group-item">
+        `renderTracked`和`renderTriggered`：当渲染函数被追踪或触发时被调用
+      </li>
+    </ul>
+    <img
+      src="https://cn.vuejs.org/assets/lifecycle.16e4c08e.png"
+      class="w-100" />
+    <div id="app">
+      <p>{{ message }}</p>
+      <button @click="change()">change改变数据</button>
+      <button @click="destr()">destroy销毁实例</button>
+      <button @click="getDom()">获取实例dom</button>
+      <button @click="getData()">获取实例data</button>
+      <button @click="getMethods()">获取实例methods</button>
+    </div>
+    <script>
+      let obj = { "el: ": this.$el, "data: ": this.data };
+      function T(name, el, data, methods) {
+        this["生命周期钩子函数"] = name;
+        this["el (实例挂载的dom)"] = el;
+        this["data (实例的数据)"] = data;
+        this["methods (实例中的方法)"] = methods;
+      }
+      let app = new Vue({
+        el: "#app",
+        data: {
+          message: 66,
+        },
+        methods: {
+          test() {
+            console.log("测试方法");
+          },
+          change() {
+            this.message++;
+            console.log(this.message);
+          },
+          destr() {
+            this.$destroy();
+          },
+          getDom() {
+            console.log(this.$el);
+          },
+          getData() {
+            console.log(this.message);
+          },
+          getMethods() {
+            console.log(this.test);
+          },
+        },
+        beforeCreate() {
+          let obj = new T("beforeCreate", this.$el, this.message, this.test);
+          console.table({ 创建前: obj });
+        },
+        created() {
+          let obj = new T("created", this.$el, this.message, this.test);
+          console.table({ 创建后: obj });
+        },
+        beforeMount() {
+          let obj = new T("beforeMount", this.$el, this.message, this.test);
+          console.table({ 挂载前: obj });
+        },
+        mounted() {
+          // 实例被挂载后调用，这时 el 被新创建的 vm.$el 替换了。如果根实例挂载到了一个文档内的元素上，当 mounted 被调用时 vm.$el 也在文档内。
+          let obj = new T("mounted", this.$el, this.message, this.test);
+          console.table({ 挂载后: obj });
+        },
+        beforeUpdate() {
+          // 数据更新时调用，发生在虚拟 DOM 打补丁之前。这里适合在更新之前访问现有的 DOM，比如手动移除已添加的事件监听器。
+          let obj = new T("beforeUpdate", this.$el, this.message, this.test);
+          console.table({ "数据更新，DOM 重新渲染前": obj });
+        },
+        updated() {
+          let obj = new T("updated", this.$el, this.message, this.test);
+          console.table({ "数据更新，DOM 重新渲染后": obj });
+          //将回调延迟到下次DOM更新循环之后执行。在修改数据之后立即使用它，然后等待DOM更新。它跟全局方法Vue.nextTick一样，不同的是回调的this自动绑定到调用它的实例上
+          this.$nextTick(() => {
+            console.log("这是 update 中的回调"); // DOM现在更新了,`this`绑定到当前实例
+          });
+        },
+        beforeDestroy() {
+          this.change();
+          // 实例销毁之前调用。在这一步，实例仍然完全可用。
+          let obj = new T("beforeDestroy", this.$el, this.message, this.test);
+          console.table({ "实例销毁前，此时实例还完全可用": obj });
+        },
+        destroyed() {
+          this.message = 123;
+          // 实例销毁后调用。该钩子被调用后，对应 Vue 实例的所有指令都被解绑，所有的事件监听器被移除，所有的子实例也都被销毁。
+          let obj = new T("destroyed", this.$el, this.message, this.test);
+          console.table({ 实例销毁后: obj });
+          this.test();
+        },
+      });
+    </script>
+  </body>
+</html>

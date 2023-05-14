@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.6.5/vue-router.min.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <div class="container" id="路由守卫">
+      <p>
+        **路由守卫**是 Vue
+        中用来控制导航的一种机制，可以在路由跳转或取消之前执行一些操作。
+        <br />
+        如beforeEnter、beforeRouteEnter、beforeRouteUpdate 和 beforeRouteLeave
+        等。这些守卫可以接收 to、from 和 next 三个参数，并根据不同的情况调用
+        next 函数来决定是否继续导航
+      </p>
+      <ul>
+        <li>
+          **全局守卫**：在路由实例上直接注册的钩子函数，它会在每次导航时触发，常用于进行全局的登录验证和权限检查。
+        </li>
+        <li>
+          **路由独享的守卫**：在路由配置上定义的beforeEnter钩子函数，它只在进入该路由时触发，常用于进行特定路由的验证和处理。
+        </li>
+        <li>
+          **组件内的守卫**：在路由组件内部定义的钩子函数，它可以访问组件的实例，常用于获取数据或执行组件相关的操作。
+        </li>
+      </ul>
+      <ul>
+        <li>检查用户是否已登录，如果没有则重定向到登录页面</li>
+        <li>根据用户的角色或权限，决定是否允许访问某些页面</li>
+        <li>在用户离开页面前，提示用户保存修改或取消操作</li>
+        <li>
+          在导航发生时，执行一些辅助功能，如分析、更改页面标题、声明页面等
+        </li>
+      </ul>
+      <router-view></router-view>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <router-link to="/home" class="nav-link">推荐</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/follow" class="nav-link">关注</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/login" class="nav-link">登录</router-link>
+        </li>
+      </ul>
+    </div>
+  </body>
+  <script>
+    //路由独享的守卫
+    let beforeEnterFun = (to, from, next) => {
+      console.log(`${to.path} => ${from.path}`);
+      if (!this.loginState) {
+        next({ path: "/login" }); //如果未登录,跳转至登录界面
+      } else {
+        next(); //如果已经登录，则不拦截跳转，正常跳转
+      }
+    };
+    new Vue({
+      el: "#路由守卫",
+      data: {
+        loginState: false,
+      },
+      router: new VueRouter({
+        routes: [
+          //路由匹配规则
+          { path: "/", redirect: "/home" }, //redirect重定向。默认页定向至首页
+          {
+            path: "/home",
+            component: {
+              template: `<div class="alert alert-danger p-5" style="font-size: 60px">首页</div>`,
+            },
+            beforeEnter: beforeEnterFun, //添加路由独享的守卫。其目的是检测是否已登录。未登录则跳转至登录界面
+          },
+          {
+            path: "/follow",
+            component: {
+              template: `<div class="alert alert-info p-5" style="font-size: 60px">关注列表</div>`,
+            },
+            beforeEnter: beforeEnterFun, //只有登陆后才能查看关注列表
+          },
+          {
+            path: "/login",
+            component: {
+              template: `<div class="alert alert-dark p-5" style="font-size: 60px">请您登录</div>`,
+            },
+          },
+        ],
+        linkActiveClass: "active",
+      }),
+    });
+  </script>
+</html>

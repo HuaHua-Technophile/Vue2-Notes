@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.6.5/vue-router.min.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <p>
+      router.push()方法会向history栈添加一个新的记录，当用户点击浏览器后退按钮时，则回到之前的
+      URL。
+      <br />在组件加上replace属性后，它改为调用router.replace(location).可理解为:替换掉当前的
+      history记录,不添加历史记录
+    </p>
+    <p>
+      //push方法也可以传replace;this.$router.push({path: '/home', replace:
+      true})
+      <br />&lt;router-link to="/home" replace>&lt;/router-link>
+      <br />上方的行内replace属性可以不写,而写进push内的对象:
+      <br />&lt;router-link :to="{path:'/home',replace:true}">&lt;/router-link>
+    </p>
+    <hr />
+    <p>tar属性指示&lt;router-link>渲染成某种标签</p>
+    <hr />
+    行内设置append属性后，则在当前(相对)路径前添加其路径。例如，我们从/a导航到一个相对路径b，如果没有配置append，则路径为/b，如果设置append属性，则为/a/b
+    <br />&lt;router-link to="/path" append> => index/a/path
+    <br />&lt;router-link to="/path"> => index/path
+    <hr />
+    <p>active-class属性设置链接激活时添加的class类名。</p>
+    &lt;router-link to="/page1" active-class="激活">
+    <hr />
+    <p>同样的,exact-active-class属性设置链接被精确匹配的时添加的class类名</p>
+    &lt;router-link to="/page1" exact-active-class="精确匹配">
+    <hr />
+    <p>
+      event属性声明可以用来触发导航的事件。可以是一个字符串或是一个包含字符串的数组。
+    </p>
+    &lt;router-link to="/page1" event="mouseover">
+    <p>
+      以上代码设置了event为"mouseover"，表明在鼠标移动到这个路由标签上时就会激活page1,无需点击
+    </p>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <p>
+      vm.$on( event, callback )
+      <br />$on 本身是一个函数 ,
+      作用是为组件实例绑定自定义事件,事件只能由$emit触发。
+      <br />$on函数由两个参数,第一个参数指定事件名称,第二个参数指定回调函数,回调函数可以接收
+      $emit传递的所有额外参数。
+      <br />第一个参数有两种类型,其一字符串,用于绑定单个事件，其二数组,用于同时绑定多个事件。
+    </p>
+    <p>
+      vm.$off( [event, callback] )
+      <br />移除自定义事件监听器
+      <li>如果没有提供参数，则移除所有的事件监听器；</li>
+      <li>如果只提供了事件，则移除该事件所有的监听器；</li>
+      <li>如果同时提供了事件与回调，则只移除这个回调的监听器。</li>
+    </p>
+    <p>
+      vm.$emit( eventName, […args] )
+      <br />$emit
+      本身是一个函数,可以触发组件实例上绑定的自定义事件,并传入额外参数给监听器的回调函数。
+      <br />$emit 函数的第一个参数必填,指定触发的事件,
+      其余参数选填,均为传入事件回调的参数。
+    </p>
+    <div class="container" id="组件间数据交互">
+      <div class="row"><t1></t1><t2></t2></div>
+      <button class="btn btn-outline-info" @click="off()">
+        销毁$on绑定在事件总线上的自定义事件
+      </button>
+    </div>
+    <ul>
+      Vue 组件之间数据传递的几种方式：
+      <li>
+        父组件向子组件传递数据，使用props属性；子组件向父组件中传递数据，在子组件中使用$emit派发事件，父组件中使用v-on
+        监听事件；缺点：组件嵌套层次多的话，传递数据比较麻烦。
+      </li>
+      <li>
+        祖先组件通过依赖注入(inject /
+        provide)的方式，向其所有子孙后代传递数据；缺点：无法监听数据修改的来源，不支持响应式。
+      </li>
+      <li>
+        通过属性$root / $parent / $children /
+        ref，访问根组件、父级组件、子组件中的数据；缺点：要求组件之间要有传递性。
+      </li>
+      <li>
+        通过事件总线(event
+        bus)的方式，可以实现任意两个组件间进行数据传递；缺点：不支持响应式，这个概念是vue1.0版本中的，现在已经废弃。
+      </li>
+      <li>
+        通过 VueJs 的状态管理模式
+        Vuex，实现多个组件进行数据共享，推荐使用这种方式进行项目中各组件间的数据传递。
+      </li>
+    </ul>
+  </body>
+  <script>
+    let databus = new Vue(); // 提供事件总线(数据总线)(数据交换中心)
+    Vue.component("t1", {
+      template: `<div class="col-6 alert alert-info d-flex justify-content-between align-items-center">{{num1}}<button class="btn btn-info" @click="t1method()">点击按钮触发t2组件上的自定义事件</button></div>`,
+      data() {
+        return {
+          num1: 0,
+        };
+      },
+      methods: {
+        t1method() {
+          databus.$emit("t2", 2); //用$emit调用t2组件中,用$on注册的事件t2()
+        },
+      },
+      //mounted生命周期函数,表示在组件刚被挂载后,就用$on注册一个databus对象上的自定义事件
+      mounted() {
+        databus.$on("t1", () => {
+          this.num1 += 1;
+        });
+      },
+    });
+    Vue.component("t2", {
+      template: `<div class="col-6 alert alert-danger d-flex justify-content-between align-items-center">{{num2}}<button class="btn btn-danger" @click='t2method()'>点击按钮触发t1组件上的自定义事件</button></div>`,
+      data() {
+        return {
+          num2: 0,
+        };
+      },
+      methods: {
+        t2method() {
+          databus.$emit("t1");
+        },
+      },
+      mounted() {
+        databus.$on("t2", (data) => {
+          this.num2 += data;
+        });
+      },
+    });
+    let vm = new Vue({
+      el: "#组件间数据交互",
+      methods: {
+        off() {
+          // 销毁$on绑定在事件总线上的自定义事件
+          databus.$off("t1");
+          databus.$off("t2");
+        },
+      },
+    });
+  </script>
+</html>

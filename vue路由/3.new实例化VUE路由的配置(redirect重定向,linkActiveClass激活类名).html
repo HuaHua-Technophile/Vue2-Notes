@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.6.5/vue-router.min.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <h4>
+      Vue-Router有两个路由模式，分别是哈希hash模式和历史history模式，然后默认的是哈希hash模式。
+      <br />vue-router中通过mode这个参数修改路由的模式
+    </h4>
+    <p>
+      hash 模式是用 createWebHashHistory() 创建的：
+      <br />hash模式是开发中默认的模式，它的URL带着一个#，例如：www.baidu.com/#/vue，它的hash值就是#/vue
+      <br />hash的值会出现在URL里面的,#后的字符会被浏览器解读为位置标识符,因此不会出现在HTTP请求之中，也就是说，它并没有向后端发起请求，对后端是没有影响的
+      <br />每一次改变#后的部分，都会在浏览器的访问历史中增加一个记录，使用"后退"按钮，就可以回到上一个位置。
+      <br />可通过window.location.hash属性读取 hash 值，并且
+      window.location.hash 这个属性可读可写 <br />使用
+      window.addEventListener("hashchange", fun) 可以监听 hash 的变化
+    </p>
+    <hr />
+    <p>history模式</p>
+    <p>
+      History 接口允许操作浏览器的曾经在标签页或者框架里访问的会话历史记录。
+      <br />使用 back(), forward()和 go()
+      方法来完成在用户历史记录中向后和向前的跳转。 <br />HTML5引入了
+      history.pushState() 和 history.replaceState()
+      方法，它们分别可以添加和修改历史记录条目。
+    </p>
+    <p>
+      使用 history 模式时，URL 就像正常的 url，例如
+      http://xxx/index.html,可避免如下问题
+      <li>微信三方登录回调地址，有#号时，接收不到code参数</li>
+      <li>微信H5支付的回调地址，不允许有#</li>
+      <li>App分享，处理特殊字符时，可能会对#进行编译,影响美观</li>
+    </p>
+    <h4>redirect重定向</h4>
+    <p>
+      基本重定向只需在路由配置文件中（/src/router/index.js）把原来的 component
+      参数 换成 redirect 参数。
+    </p>
+    <pre>
+  {
+    path:'/goback',
+    redirect:'/'
+  }
+</pre
+    >
+    <p>
+      上方设置了 goback 路由，但没有配置任何 component 组件 ，而是直接 redirect
+      到 path:"/" （首页）下，这就是一个简单的重定向。
+    </p>
+    <hr />
+    <p>
+      linkActiveClass可以设置激活时的类名,等效于router-link路由组件标签的行内active-class属性
+      <br />linkExactActiveClass同理,设置精确匹配激活时的class类名
+    </p>
+    <div class="container" id="路由示例">
+      <div class="row">
+        <div class="col-12 overflow-hidden">
+          <!-- 导航选项卡 -->
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/">Page1</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/page2">Page2</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/page3">Page3</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/goback">返回首页</router-link>
+            </li>
+          </ul>
+          <!-- 路由视图,可以搭配vue动画实现页面切换的动效 -->
+          <transition name="page-change" mode="out-in">
+            <router-view></router-view>
+          </transition>
+        </div>
+      </div>
+    </div>
+    <style>
+      .page-change-enter-active,
+      .page-change-leave-active {
+        transition: all 0.3s linear;
+      }
+      .page-change-enter {
+        opacity: 0;
+        transform: translateX(-50%);
+      }
+      .page-change-leave-to {
+        opacity: 0;
+        transform: translateX(50%);
+      }
+    </style>
+    <script>
+      let vm = new Vue({
+        el: "#路由示例",
+        router: new VueRouter({
+          mode: "hash", //修改路由模式
+          routes: [
+            {
+              path: "/goback",
+              redirect: "/",
+            },
+            {
+              path: "/",
+              component: {
+                template: `<div class="alert alert-info"><h1>页面1</h1></div>`,
+              },
+            },
+            {
+              path: "/page2",
+              component: {
+                template: `<div class="alert alert-info"><h1>页面2</h1></div>`,
+              },
+            },
+            {
+              path: "/page3",
+              component: {
+                template: `<div class="alert alert-info"><h1>页面3</h1></div>`,
+              },
+            },
+          ],
+          // linkActiveClass: 'active',
+          linkExactActiveClass: "active",
+        }),
+      });
+    </script>
+  </body>
+</html>

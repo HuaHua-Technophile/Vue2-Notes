@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>6.v-for遍历数组、对象</title>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="alert alert-dark">
+            v-for可以让你遍历一个数组或一个对象，并在浏览器上渲染出列表。v-for需要一种特殊的语法，形式为item
+            in items，其中items是源数据数组，item是被遍历的数组元素的别名
+          </div>
+          <ol class="list-group mb-2">
+            <li class="list-group-item" v-for="item in arr1">元素{{item}}</li>
+          </ol>
+          <ol class="list-group mb-2">
+            <li class="list-group-item" v-for="item,index in arr1">
+              元素{{item}}--下标{{index}}
+            </li>
+          </ol>
+          <ol class="list-group mb-2">
+            <li class="list-group-item" v-for="(item,index) in arr1">
+              元素{{item}}--下标{{index}}
+            </li>
+          </ol>
+          <ol class="list-group mb-2">
+            <li class="list-group-item" v-for="value in obj1">值{{value}}</li>
+          </ol>
+          <ol class="list-group mb-2">
+            <li class="list-group-item" v-for="value,key in obj1">
+              值{{value}} : 键名{{key}}
+            </li>
+          </ol>
+          <ol class="list-group mb-2">
+            <li class="list-group-item" v-for="(value,key) in obj1">
+              值{{value}} : 键名{{key}}
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div id="case1" class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="alert alert-info">
+            下方共有{{identity.length}}条身份数据
+          </h1>
+          <div class="input-group">
+            <label for="name" class="input-group-text">姓名</label>
+            <input class="form-control" id="name" v-model="name" />
+            <label for="age" class="input-group-text">年龄</label>
+            <input class="form-control" id="age" v-model="age" />
+            <button class="btn btn-outline-info" @click="AddData">添加</button>
+          </div>
+          <ul class="list-group mt-3">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+              v-for="item,index in identity">
+              <span>姓名 : {{item[0]}} --- 年龄 : {{item[1]}}</span>
+              <button class="btn btn-outline-danger" @click="DeleteList(index)">
+                删除
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          arr1: ["item1", "item2", "item3"],
+          obj1: {
+            key1: "value1",
+            key2: "value2",
+            key3: "value3",
+          },
+        },
+      });
+      new Vue({
+        el: "#case1",
+        data: {
+          identity: [],
+          name: "花花",
+          age: "20",
+        },
+        methods: {
+          AddData: function () {
+            this.identity.push([this.name, this.age]);
+          },
+          DeleteList: function (index) {
+            this.identity.splice(index, 1);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

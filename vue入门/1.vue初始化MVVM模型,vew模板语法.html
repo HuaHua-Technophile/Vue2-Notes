@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <!-- vue.js 便是 viewmodel模型 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>1.vue初始化MVVM模型,vew模板语法</title>
+  </head>
+  <body>
+    <!-- 被实例化VUE对象绑定的页面element元素,便是view模型 -->
+    <div id="app">
+      <h1>{{message}}</h1>
+      <div>{{1+1}}</div>
+      <div>{{1+1 == 2}}</div>
+      <div>{{1+1 == 2? '对':'错'}}</div>
+      <div>{{1+1 == 2? '对':'错'}}</div>
+      <div>{{ arr_e1 }}</div>
+      <div>{{ arr_e1[1] }}</div>
+      <div>{{ arr_e1.join('、') }}</div>
+      <div>{{ false || '真前假后' }}</div>
+      <div>{{ true && '真前假后' }}</div>
+    </div>
+    <script>
+      // M model 模型
+      var vm = new Vue({
+        el: "#app", //绑定element元素,也就是在model模型中,绑定view模型
+        data: {
+          //数据绑定
+          message: `我们已经成功创建了第一个 Vue 应用！看起来这跟渲染一个字符串模板非常类似，但是 Vue 在背后做了大量工作。现在数据和 DOM 已经被建立了关联，所有东西都是响应式的。我们要怎么确认呢？打开你的浏览器的 JavaScript 控制台 (就在这个页面打开)，并修改 app.message 的值，你将看到本数据相应地更新.
+            我们不再和 HTML 直接交互了。一个 Vue 应用会将其挂载到一个 DOM 元素上 (对于这个例子是 #app) 然后对其进行完全控制。那个 HTML 是我们的入口，但其余都会发生在新创建的 Vue 实例内部`,
+          arr_e1: ["a", "b"],
+        },
+      });
+    </script>
+  </body>
+</html>

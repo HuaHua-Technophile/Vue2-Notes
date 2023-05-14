@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <template id="模板组件_通过ID绑定">
+      <div class="alert alert-info shadow user-select-none" @click="count++">
+        我是提前在页面中写明(可使用补全之类的辅助)的预定于模板组件
+        <br />(未调用时不会在页面中显示)<br />我被点击了{{count}}次
+      </div>
+    </template>
+    <template id="子父组件传参示例1">
+      <ul class="list-group pe-0 mt-2">
+        <h4 class="text-center border rounded-top mb-0">
+          共{{arrery.length}}条数据
+        </h4>
+        <li v-for="item,index in arrery" class="list-group-item">
+          姓名:{{item.name}} --- 年龄:{{item.age}}
+        </li>
+      </ul>
+    </template>
+    <template id="子父组件传参示例2">
+      <li
+        class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
+        姓名:{{list.name}} --- 年龄:{{list.age}}
+        <button class="btn btn-outline-danger" @click="btnMethod(a,i)">
+          删除
+        </button>
+      </li>
+    </template>
+    <div id="示例" class="container">
+      <div class="row">
+        <Template_1></Template_1>
+        <Template_1></Template_1>
+        <Template_1></Template_1>
+        <div class="input-group p-0">
+          <label class="input-group-text" for="name">姓名</label>
+          <input type="text" id="name" class="form-control" v-model="name" />
+          <label class="input-group-text" for="age">年龄</label>
+          <input
+            type="text"
+            id="age"
+            class="form-control"
+            v-model.number="age" />
+          <button class="btn btn-outline-primary" @click="AddData()">
+            添加
+          </button>
+        </div>
+        <Template_ul :arrery="Datalist"></Template_ul>
+        <Template_ul :arrery="Datalist"></Template_ul>
+        <ul class="list-group border-danger p-0">
+          <Template_li
+            v-for="item,index in Datalist"
+            :list="item"
+            :i="index"
+            :a="Datalist"
+            :key="index"
+            @del="AllArreryDelete"></Template_li>
+          <!-- 引入外部方法并绑定为私有方法时,使用v-on语法(简化为@符),且不能带括号,否则无法传参-->
+        </ul>
+      </div>
+    </div>
+  </body>
+  <script>
+    new Vue({
+      el: "#示例",
+      data: {
+        name: "花花",
+        age: 20,
+        Datalist: [{ name: "张三", age: 18 }],
+      },
+      methods: {
+        AddData() {
+          this.Datalist.push({
+            name: this.name,
+            age: this.age,
+          });
+        },
+        AllArreryDelete(arr, index) {
+          arr.splice(index, 1);
+        },
+      },
+      components: {
+        Template_1: {
+          template: "#模板组件_通过ID绑定",
+          data() {
+            return {
+              count: 0,
+            };
+          },
+        },
+        Template_ul: {
+          template: "#子父组件传参示例1",
+          props: ["arrery"], //接受父组件传递的自定义属性名(str),在调用标签时使用v-bind绑定数据.主语props时单向绑定的:外部属性变化时，将传导给子组件.但不会反过来
+        },
+        Template_li: {
+          template: "#子父组件传参示例2",
+          props: ["list", "i", "a"],
+          methods: {
+            btnMethod(...val) {
+              this.$emit("del", ...val); //通过 Vue.$emit调用外部传入的方法del,后接参数列表.(此处this指向实例化后的Vue对象，而无需直接写对象名字)
+            },
+            /* 引入外部方法并绑定为私有方法时,使用v-on语法(简化为@符),且不能带括号,否则无法传参 */
+          },
+        },
+      },
+    });
+  </script>
+</html>

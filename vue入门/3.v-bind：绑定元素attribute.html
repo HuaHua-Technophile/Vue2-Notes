@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>
+      3.v-bind：绑定元素attribute<!-- 1.vue初始化MVVM模型,vew模板语法 -->
+    </title>
+  </head>
+  <body>
+    <div id="app">
+      <input v-bind:type="type1" v-bind:value="val1" style="width: 100%" />
+      <input :type="type1" :[pla1]="pla1_1" :[in2_attr]="attr1_1" />
+      <textarea
+        :rows="input_row"
+        :style="{width: '100%', 'font-size':'18px'}"
+        :value="val2"></textarea>
+      <textarea
+        :rows="input_row"
+        :style="textarea_style"
+        :value="val2"></textarea>
+      <textarea
+        :rows="input_row"
+        :value="val2"
+        :class="['form-control',1+1==2?'mt-2':'fs-1']"></textarea>
+      <textarea
+        :rows="input_row"
+        :value="val2"
+        :class="{'form-control':true,'fs-1':false,'fs-3':true,'mt-2':true}"></textarea>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          type1: "text",
+          val1: "页面加载于 " + new Date().toLocaleString(),
+          w75: `75`,
+          pla1: `placeholder`,
+          pla1_1: `v-bind:语法可缩写为一个冒号。也就是直接在元素的属性前添加冒号，元素等号后写入model模型中定义的值即可.还可以使用冒号加方括号:[]自定义attribute的名，而不仅仅是attribute的值`,
+          in2_attr: `class`, //在控制台中修改为id,元素也会立马由class='xxx'编为id='xxx'
+          attr1_1: `form-control`,
+          val2: `通过vue控制类名attribute,可以直接写入数组,数组可搭配布尔值控制是否写入.也可直接写入对象.键名为类名,值为布尔值控制是否写入类名;通过vue控制样式attribute,可以直接写入对象.有'-'连接符的属性名需用引号包裹`,
+          input_row: 6,
+          textarea_style: {
+            display: "block",
+            width: "100%",
+            padding: ".375rem .75rem",
+            "font-size": "1rem",
+            "font-weight": "400",
+            "line-height": "1.5",
+            color: "var(--bs-body-color)",
+            "background-color": "var(--bs-body-bg)",
+            "background-clip": "padding-box",
+            border: "var(--bs-border-width) solid var(--bs-border-color)",
+            "-webkit-appearance": "none",
+            "-moz-appearance": "none",
+            appearance: "none",
+            "border-radius": "var(--bs-border-radius)",
+            transition:
+              "border-color .15s ease-in-out,box-shadow .15s ease-in-out",
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

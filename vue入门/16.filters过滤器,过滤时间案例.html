@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>16.过滤器,过滤时间案例</title>
+  </head>
+  <body>
+    <p>
+      Vue.js
+      允许我们自定义过滤器，可被用于一些常见的文本格式化。过滤器可以用在两个地方：双花括号（{undefined{
+      }}）插值和 v-bind 表达式 (后者从 2.1.0+ 开始支持)
+    </p>
+    <pre>
+比如，Java后端返回的时间戳精确到秒，而JS中的时间戳是用毫秒表示，则可以定义一个转换时间戳的全局过滤器:
+      Vue.filter('millisecond', (value) => {
+        if (!value) return ''
+        value = value.toString()
+        return value.charAt(0).toUpperCase() + value.slice(1)
+      })</pre
+    >
+    <pre>
+全局过滤器经常会被在数据修饰上，通常我们把处理函数给抽离出去，统一放在一个.js文件中。
+      // filter.js 文件
+      let filterPrice = (value) => {
+        return '已收款' + value + '元'
+      }
+      let filterDate = (value) => {
+          return value + '天'
+      }
+      export default {filterPrice,filterDate}</pre
+    >
+    <p>
+      过滤器有时候同methods、computed、watch一样可以达到处理数据的目的，但又不能替代它们，因为它不能改变原始值。
+      <br />如果一个过滤器的内部特别复杂，可以考虑把它写成一个计算属性，因为计算属性本身带有缓存，可复用性强，而过滤器一般用来做一些简单的操作
+    </p>
+    <div class="container" id="示例">
+      <div class="row">
+        <div class="col-12 input-group">
+          <input type="text" class="form-control" v-model="val" />
+        </div>
+        <div>过滤器格式化文本示例1 : {{val|filters1}}</div>
+        <div class="col-12 input-group">
+          <input
+            type="number"
+            class="form-control"
+            v-model.number="sex"
+            placeholder="键入1或0,过滤器会处理数据并输出性别" />
+        </div>
+        <div>过滤器格式化文本实例2 : {{sex|filters2}}</div>
+        <div class="col-12 input-group">
+          <input
+            type="text"
+            class="form-control"
+            v-model="time"
+            placeholder="过滤器会处理输入的时间戳并输出日期" />
+        </div>
+        <div>
+          过滤器格式化文本实例3 : {{time|dateFormat(`YYYY年M月Dd日 eee
+          HHH:mmm:ssss`)}}
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    Vue.filter("dateFormat", function (dateTmp, fmtTmp) {
+      let fmt = fmtTmp ? fmtTmp : "yyyy.MM.dd"; //是否初始输入了格式化模板
+      let date = dateTmp instanceof Date ? dateTmp : new Date(dateTmp); //15-4-2判断对象是否属于某个类
+      let o = {
+        "(M+)": date.getMonth() + 1, // 月份
+        "([d|D]+)": date.getDate(), // 日
+        "(h+)": date.getHours() % 12 == 0 ? 12 : date.getHours() % 12, // 12小时
+        "(H+)": date.getHours(), // 24小时
+        "(m+)": date.getMinutes(), // 分
+        "(s+)": date.getSeconds(), // 秒
+        "([q|Q]+)": Math.floor((date.getMonth() + 3) / 3), // 季度
+        "(S+)": date.getMilliseconds(), // 毫秒
+      };
+      let week = ["日", "一", "二", "三", "四", "五", "六"];
+      if (/(Y+)/i.test(fmt)) {
+        fmt = fmt.replace(
+          RegExp.$1,
+          (date.getFullYear() + "").substr(4 - RegExp.$1.length)
+        ); //substr()方法返回一个字符串的一部分，两个参数：开始位置和长度
+      }
+      if (/(E+)/i.test(fmt)) {
+        fmt = fmt.replace(
+          RegExp.$1,
+          (RegExp.$1.length > 1 ? (RegExp.$1.length > 2 ? "星期" : "周") : "") +
+            week[date.getDay()]
+        );
+      }
+      for (let k in o) {
+        if (new RegExp(k).test(fmt)) {
+          fmt = fmt.replace(
+            RegExp.$1,
+            RegExp.$1.length > 1 ? (o[k] + "").padStart(2, "0") : o[k]
+          );
+        }
+      }
+      return fmt;
+    });
+    new Vue({
+      el: "#示例",
+      data: {
+        val: "",
+        sex: null,
+        time: null,
+      },
+      filters: {
+        filters1: (val) => val + "元",
+        filters2: (sex) => {
+          if (sex == 0) return "女";
+          if (sex == 1) return "男";
+        },
+      },
+    });
+  </script>
+</html>

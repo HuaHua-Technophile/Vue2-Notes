@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <p>
+      组件（Component）是 Vue.js 最强大的功能之一。
+      <br />组件可以扩展 HTML 元素，封装可重用的代码。
+      <br />组件系统让我们可以用独立可复用的小组件来构建大型应用，几乎任意类型的应用的界面都可以抽象为一个组件树：
+    </p>
+    <p>注册一个全局组件语法 ： Vue.component(tagName, options)</p>
+    <p>
+      tagName为组件名(大写字母只能出现在开头;允许使用下划线;不许使用连接符)，options为配置选项。注册后，我们可以使用标签名方式来调用组件：
+      &lt;tagName>&lt;/tagName>
+    </p>
+    <p>
+      组件中的'data'不是一个对象，而是一个函数.这样的好处就是每个组件(实例)可以维护一份被返回对象的独立的拷贝，如果'data'是一个对象则会影响到其他实例
+    </p>
+    <hr />
+    <div id="示例">
+      <Title_1></Title_1>
+      <button_example></button_example>
+      <Private_component></Private_component>
+    </div>
+    <script>
+      Vue.component("Title_1", {
+        template: "<h3>自定义组件（标题）：Title_1</h3>",
+      }); //全局组件
+      Vue.component("button_example", {
+        template: `
+                <div class="d-flex ms-5 me-5 p-2 border border-danger">
+                    <button @click='add' class="btn btn-info">数值加</button>
+                    <h2>{{count}}</h2>
+                </div>
+            `, //html标签
+        data() {
+          return {
+            count: 0,
+          };
+        },
+        methods: {
+          add() {
+            this.count += 1;
+          },
+        },
+      }); //全局组件
+      let example = new Vue({
+        el: "#示例",
+        //局部组件（私有组件）key(组件名):{}(组件本体)
+        components: {
+          Private_component: {
+            template: '<div class="m-3 p-2 border">私有组件</div>',
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

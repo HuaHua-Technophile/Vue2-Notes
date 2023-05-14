@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>10.v-once只渲染一次</title>
+  </head>
+  <body>
+    <div class="container">
+      <div id="知识点" class="row">
+        <div class="alert alert-dark" v-html="html1" v-once></div>
+        <div class="alert alert-info" v-once>{{text1}}</div>
+        <div class="alert alert-danger" v-once>{{tips1}}</div>
+      </div>
+    </div>
+  </body>
+  <script>
+    let vm = new Vue({
+      el: "#知识点",
+      data: {
+        html1: `<h3>通过 v-once 创建低开销的静态组件,只渲染元素和组件一次。随后的重新渲染，元素/组件及其所有的子节点将被视为静态内容并跳过。这可以用于优化更新性能</h3>
+渲染普通的 HTML 元素在 Vue 中是非常快速的，但有的时候你可能有一个组件，这个组件包含了大量静态内容。在这种情况下，你可以在根元素上添加 v-once 以确保这些内容只计算一次然后缓存起来` /*  */,
+        text1: `你可以尝试在控制台中修改vm.data中的属性(vm.html1,vm.text1,vm.tips1)而页面内容不会被重新渲染`,
+        tips1: `试着不要过度使用这个模式。当你需要渲染大量静态内容时，极少数的情况下它会给你带来便利，除非你非常留意渲染变慢了，不然它完全是没有必要的——再加上它在后期会带来很多困惑。例如，设想另一个开发者并不熟悉 v-once 或漏看了它在模板中，他们可能会花很多个小时去找出模板为什么无法正确更新`,
+      },
+    });
+  </script>
+</html>

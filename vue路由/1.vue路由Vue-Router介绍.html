@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.6.5/vue-router.min.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <ul>
+      <li>
+        vue-router是Vue.js官方的路由插件，它和vue.js是深度集成的，适合用于构建单页面应用。
+      </li>
+      <li>
+        vue的单页面应用是基于路由和组件的，**路由用于设定访问路径，并将路径和组件映射起来**。
+      </li>
+      <li>传统的页面应用，是用一些超链接来实现页面切换和跳转的。</li>
+      <li>在vue-router单页面应用中，则是路径之间的切换，也就是组件的切换。</li>
+      <li>路由模块的本质就是建立起url和页面之间的映射关系。</li>
+    </ul>
+    <ul>
+      vue路由的用法有两种模式：
+      <li>
+        hash模式：依靠hash值（锚链接）的变化进行实现，hash的变化会导致浏览器记录访问历史的变化、但是hash的变化不会触发新的URL请求。这种模式兼容性好，但是url中会有#号。
+      </li>
+      <li>
+        history模式：利用HTML5的history
+        API（pushState和replaceState）来修改url地址栏，而不刷新界面。这种模式url更美观，但是需要服务器端配合重定向。
+      </li>
+    </ul>
+    <ul>
+      vue路由还有两种导航方式：
+      <li>
+        编程式导航：通过编写代码来实现路由跳转，比如使用router.push或router.replace方法。
+      </li>
+      <li>
+        组件式导航：通过使用&lt;router-link>组件来实现路由跳转，通过to属性指定目标地址，默认渲染为带有正确连接的&lt;a>标签。
+      </li>
+    </ul>
+    <ul>
+      vue路由还可以传递参数：
+      <li>
+        params方式：在定义路由时使用:name占位符，然后在跳转时传入params对象，比如&lcub;
+        name: 'user', params: &lcub; userId: 123
+        &rcub;&rcub;。这种方式不会改变url地址栏，但是需要在&lt;router-view>组件上使用props属性接收参数。
+      </li>
+      <li>
+        query方式：在定义路由时不需要占位符，然后在跳转时传入query对象，比如&lcub;
+        path: '/user', query: &lcub; userId: 123
+        &rcub;&rcub;。这种方式会改变url地址栏，并且可以通过this.$route.query获取参数。
+      </li>
+    </ul>
+    <ul>
+      vue路由的优点有：
+      <li>可以实现单页面应用，提高用户体验和开发效率。</li>
+      <li>可以利用vue-router提供的API和组件来灵活地控制路由跳转和参数传递。</li>
+      <li>可以利用路由守卫来实现权限控制和导航钩子。</li>
+    </ul>
+    <ul>
+      vue路由的缺点有：
+      <li>需要额外学习vue-router的知识和配置。</li>
+      <li>首次加载会比较慢，因为需要加载所有组件。</li>
+      <li>不利于SEO，因为搜索引擎爬虫无法抓取动态渲染的内容。</li>
+    </ul>
+    <h1>
+      router-link是一个特殊的组件，会被转译为实体标签.不设置tag属性时,默认为a标签.该组件用于设置一个导航链接，切换不同
+      HTML 内容。<br />to属性为目标地址， 即要显示的内容
+      <br />点击后,内部会立刻把 to 的值传到
+      router.push()，所以这个值可以是一个字符串或者是描述目标位置的对象
+    </h1>
+    <h1>
+      被激活的路由切换组件(router-link),会加上样式class="router-link-exact-active
+      router-link-active"
+    </h1>
+    <hr />
+    <div id="路由示例">
+      <!-- 路由组件,会被转译为实体a标签.不论转译成啥,点击就会传值给router.push(),就会切换路由视图 -->
+      <router-link to="/">首页</router-link>
+      <router-link to="/page1">页面1</router-link>
+      <router-link to="/page2" tag="div" class="alert alert-info"
+        >页面2</router-link
+      >
+      <a href="#/">真正的a标签,也能跳转. href="#/"</a>
+      <a href="#/page1">href="#/page1"</a>
+      <a href="#/page2">href="#/page2"</a>
+      <!-- 路由视图,不会被转译为实体标签 -->
+      <router-view></router-view>
+    </div>
+    <script>
+      let vm = new Vue({
+        el: "#路由示例",
+        router: new VueRouter({
+          routes: [
+            {
+              path: "/",
+              component: {
+                template: `<h1>默认首页,path填写了:"/"</h1>`,
+              },
+            },
+            {
+              path: "/page1",
+              component: {
+                template: `<p>页面1内容,可以是任意模板,path填写了:"/page1"</p>`,
+              },
+            },
+            {
+              path: "/page2",
+              component: {
+                template: `<button>页面2内容,可以是任意模板,path填写了:"/page2"</button>`,
+              },
+            },
+          ],
+        }),
+      });
+    </script>
+  </body>
+</html>

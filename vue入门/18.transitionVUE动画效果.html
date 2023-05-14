@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/animate.css/4.1.1/animate.compat.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
+    <title>花花</title>
+    <style>
+      .fade_t-enter-active,
+      .fade_t-leave-active {
+        transition: all 3s ease;
+      }
+      .fade_t-enter,
+      .fade_t-leave-to {
+        transform: translateX(20px);
+        opacity: 0;
+      }
+      .fade_a-enter-active {
+        animation: fade_a-in 3s;
+      }
+      .fade_a-leave-active {
+        animation: fade_a-in 3s reverse;
+      }
+      @keyframes fade_a-in {
+        0% {
+          transform: scale(0);
+        }
+        50% {
+          transform: scale(1.5);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .Change-enter-active,
+      .Change-leave-active {
+        transition: all 0.5s ease;
+      }
+      .Change-enter {
+        transform: translateX(-20px);
+        opacity: 0;
+      }
+      .Change-leave-to {
+        transform: translateX(20px);
+        opacity: 0;
+      }
+      .Group-enter-active,
+      .Group-leave-active {
+        transition: all 1s ease;
+      }
+      .Group-enter {
+        transform: translateY(-200%);
+        opacity: 0.3;
+      }
+      .Group-leave-to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      .shuffle-move {
+        transition: transform 1s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="示例">
+      <h3>Vue在元素显示与隐藏的过渡中，提供了 6 个 class 来切换：</h3>
+      <ul class="list-group">
+        <li class="list-group-item">
+          v-enter：定义进入过渡的开始状态。在元素被插入之前生效，在元素被插入之后的下一帧移除。
+        </li>
+        <li class="list-group-item">
+          v-enter-active：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。
+        </li>
+        <li class="list-group-item">
+          v-enter-to: 2.1.8版及以上
+          定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 v-enter
+          被移除)，在过渡/动画完成之后移除。
+        </li>
+        <li class="list-group-item">
+          v-leave:
+          定义离开过渡的开始状态。在离开过渡被触发时立刻生效，下一帧被移除。
+        </li>
+        <li class="list-group-item">
+          v-leave-active：定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发时立刻生效，在过渡/动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数。
+        </li>
+        <li class="list-group-item">
+          v-leave-to: 2.1.8版及以上
+          定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效 (与此同时
+          v-leave 被删除)，在过渡/动画完成之后移除。
+        </li>
+      </ul>
+      <img
+        src="https://www.runoob.com/wp-content/uploads/2018/06/transition.png"
+        class="w-100" />
+      <h3>显性的过渡持续时间:</h3>
+      <p>
+        在很多情况下，Vue 可以自动得出过渡效果的完成时机。默认情况下，Vue
+        会等待其在过渡效果的根元素的第一个 transitionend 或 animationend
+        事件。然而也可以不这样设定——比如，我们可以拥有一个精心编排的一系列过渡效果，其中一些嵌套的内部元素相比于过渡效果的根元素有延迟的或更长的过渡效果。
+        <br />在这种情况下你可以用 transition 组件上的 duration
+        属性定制一个显性的过渡持续时间 (以毫秒计)： &lt;transition
+        :duration="1000"&gt; <br />你也可以定制进入和移出的持续时间：
+        &lt;transition :duration="{ enter: 500, leave: 800 }"&gt;
+      </p>
+      <div class="d-flex align-items-center">
+        <button @click="fade_t = !fade_t" class="btn btn-outline-info">
+          点我
+        </button>
+        <transition name="fade_t" :duration="{enter:800,leave:3000}">
+          <div v-show="fade_t" class="alert alert-info m-0">
+            transform渐显渐隐
+          </div>
+        </transition>
+      </div>
+      <h3>初始渲染(加载)的过渡</h3>
+      <p>
+        可以通过添加 appear 属性设置节点在初始渲染(加载)的过渡.
+        初始渲染(加载)的过渡,和进入/离开过渡一样，同样也可以自定义 CSS 类名
+      </p>
+      <pre>
+&lt;transition appear
+appear-class="custom-appear-class"
+appear-to-class="custom-appear-to-class" (2.1.8+)
+appear-active-class="custom-appear-active-class"&gt;
+</pre
+      >
+      <div class="d-flex align-items-center">
+        <button @click="fade_a = !fade_a" class="btn btn-outline-primary">
+          点我
+        </button>
+        <transition name="fade_a" appear>
+          <div v-show="fade_a" class="alert alert-primary m-0">
+            animation渐显渐隐
+          </div>
+        </transition>
+      </div>
+      <h3>我们可以通过以下特性来自定义过渡类名：</h3>
+      <ul class="list-group">
+        <li class="list-group-item">enter-class</li>
+        <li class="list-group-item">enter-active-class</li>
+        <li class="list-group-item">enter-to-class (2.1.8+)</li>
+        <li class="list-group-item">leave-class</li>
+        <li class="list-group-item">leave-active-class</li>
+        <li class="list-group-item">leave-to-class (2.1.8+)</li>
+      </ul>
+      <div class="d-flex align-items-center">
+        <button @click="fade_c = !fade_c" class="btn btn-outline-danger">
+          点我
+        </button>
+        <transition
+          leave-active-class="animated flipOutX"
+          enter-active-class="animated tada">
+          <div v-show="fade_c" class="alert alert-danger m-0">
+            自定义类名+第三方动画框架渐显渐隐
+          </div>
+        </transition>
+      </div>
+      <h3>过渡模式(仅限v-if系列)</h3>
+      <ul>
+        <li>in-out：新元素先进行过渡，完成之后当前元素过渡离开。</li>
+        <li>out-in：当前元素先进行过渡，完成之后新元素过渡进入。</li>
+      </ul>
+      <div class="d-flex justify-content-between ms-5 me-5">
+        <div>
+          默认:
+          <transition name="Change">
+            <button
+              v-if="ChangeState1"
+              class="btn btn-light"
+              @click="ChangeState1=false"
+              key="on">
+              on</button
+            ><button
+              v-else
+              class="btn btn-light"
+              @click="ChangeState1=true"
+              key="off">
+              off
+            </button>
+          </transition>
+        </div>
+        <div>
+          mode="out-in"
+          <transition name="Change" mode="out-in">
+            <button
+              v-if="ChangeState2"
+              class="btn btn-light"
+              @click="ChangeState2=false"
+              key="on">
+              on</button
+            ><button
+              v-else
+              class="btn btn-light"
+              @click="ChangeState2=true"
+              key="off">
+              off
+            </button>
+          </transition>
+        </div>
+      </div>
+      <h3>v-for的列表过渡使用&lt;transition-group>组件</h3>
+      <ul class="list-group">
+        <li class="list-group-item">
+          不同于&lt;transition>，它会以一个真实元素呈现：默认为一个&gt;span>。你也可以通过tag行内属性更换为其他元素。
+        </li>
+        <li class="list-group-item">
+          v-if多元素过渡模式不可用，因为我们不再相互切换特有的元素
+        </li>
+        <li class="list-group-item">
+          内部元素<strong>需要提供唯一的行内key值</strong>。
+        </li>
+        <li class="list-group-item">
+          CSS过渡的类将会应用在内部的元素中，而不是这个组/容器本身
+        </li>
+      </ul>
+      <button
+        class="ms-5 btn btn-outline-secondary"
+        @click="liList.push(liList[liList.length-1]+1)">
+        添加列表元素
+      </button>
+      <button class="btn btn-outline-info" @click="liList = _.shuffle(liList)">
+        lodash乱序
+      </button>
+      <div class="d-flex">
+        <transition-group name="Group" appear tag="ul" class="list-group ms-5">
+          <li
+            v-for="item,index in liList"
+            class="list-group-item d-flex justify-content-between align-items-center"
+            :key="item">
+            {{item}}<button
+              class="ms-5 btn btn-danger"
+              @click="liList.splice(index,1)">
+              删除
+            </button>
+          </li>
+        </transition-group>
+        <transition-group name="shuffle" tag="ul" class="list-group ms-5">
+          <li
+            v-for="item,index in liList"
+            class="list-group-item list-group-item-info d-flex justify-content-between align-items-center"
+            :key="item">
+            {{item}}<button
+              class="ms-5 btn btn-danger"
+              @click="liList.splice(index,1)">
+              删除
+            </button>
+          </li>
+        </transition-group>
+      </div>
+    </div>
+    <script type="text/javascript">
+      let vm = new Vue({
+        el: "#示例",
+        data: {
+          fade_t: true,
+          fade_a: true,
+          fade_c: true,
+          ChangeState1: true,
+          ChangeState2: true,
+          liList: [0, 1, 2],
+        },
+        methods: {},
+      });
+    </script>
+  </body>
+</html>

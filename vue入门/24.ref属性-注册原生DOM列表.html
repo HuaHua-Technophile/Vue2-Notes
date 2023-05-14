@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.6.5/vue-router.min.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <div id="ref属性示例">
+      <ul>
+        <li>
+          ref属性可以用来给组件或DOM元素创建一个响应式的引用.因此可以通过.value属性操作原生DOM，访问或修改其内部值
+        </li>
+        <li>
+          ref属性也可以用来获取子组件的实例，从而调用子组件的方法或访问子组件的数据.或$el属性指代子组件所代表的DOM元素
+        </li>
+        <li>
+          ref属性返回的对象会被reactive()函数深层地转换为响应式对象，并且会自动解包嵌套的ref
+        </li>
+        <li>
+          ref属性可以和computed()函数结合，创建一个只读或可写的计算属性ref
+        </li>
+      </ul>
+      <div class="input-group w-100">
+        <input type="text" class="form-control" ref="input" @keyup="Prompt()" />
+        <button class="btn btn-outline-info" @click="logInput()">
+          输出$refs.input的值
+        </button>
+      </div>
+      <zu-jian ref="zujian"></zu-jian>
+    </div>
+    <script>
+      let vm = new Vue({
+        el: "#ref属性示例",
+        methods: {
+          logInput() {
+            console.log(this.$refs.input.value); //原生DOM对象的value属性(可读可写)
+            console.log(this.$refs.zujian.$el); //获取子组件所代表的模板
+            console.log(this.$refs.zujian.value1); //获取子组件内数据
+            this.$refs.zujian.show(); //调用子组件方法
+          },
+        },
+        components: {
+          zuJian: {
+            template: `<h1 class="text-center">子组件</h1>`,
+            data() {
+              return {
+                value1: "子组件数据",
+              };
+            },
+            methods: {
+              show() {
+                console.log("子组件方法");
+              },
+            },
+          },
+        },
+        mounted() {
+          console.log(this.$refs);
+        },
+      });
+    </script>
+  </body>
+</html>

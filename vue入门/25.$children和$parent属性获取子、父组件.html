@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.6.5/vue-router.min.js"></script>
+    <title>花花</title>
+  </head>
+  <body>
+    <div id="子父组件案例">
+      <div class="alert alert-info text-center">
+        <button class="btn btn-info" @click="getChildren">
+          点我获取子组件相关信息及方法
+        </button>
+      </div>
+      <zu-jian></zu-jian>
+      <zu-jian></zu-jian>
+    </div>
+    <script>
+      new Vue({
+        el: "#子父组件案例",
+        data: {
+          val1: "父组件data",
+        },
+        methods: {
+          getChildren() {
+            console.log(this.$children[0]); //获取子组件，子组件排列顺序是难以预测的，因此在开发中不建议使用
+            console.log(this.$children[0].val1); //获取子组件属性
+            this.$children[0].getParent(); //调用子组件方法，但极容引起死循环，因此在开发中不建议使用
+          },
+          fun1() {
+            console.log("父组件方法被调用");
+          },
+        },
+        components: {
+          zuJian: {
+            template: `<div class="alert alert-danger text-center"><button class="btn btn-danger" @click="getParent()">点我获取父组件相关信息及方法</button></div>`,
+            data() {
+              return {
+                val1: "子组件data",
+              };
+            },
+            methods: {
+              getParent() {
+                console.log("子组件方法被调用");
+                console.log(this.$parent.val1); //获取父组件数据
+                this.$parent.fun1(); //调用父组件方法，但极容引起死循环，因此在开发中不建议使用
+                // this.$parent.getChildren(); //死循环
+              },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

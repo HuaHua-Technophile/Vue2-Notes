@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>14.watch侦听器</title>
+  </head>
+  <body>
+    <div>
+      <p>当数据变化时想做某些操作，就可以用watch</p>
+      <p>
+        watch默认是浅层的：被侦听的属性，仅在被赋新值时，才会触发回调函数——而嵌套属性的变化不会触发
+      </p>
+    </div>
+    <div id="app">
+      <div class="input-group">
+        <label for="username" class="input-group-text">用户名：</label>
+        <input
+          class="form-control"
+          type="text"
+          id="username"
+          v-model.lazy="username" />
+      </div>
+      <h2>用户名可用性：<span>{{tip}}</span></h2>
+    </div>
+    <script>
+      var example = new Vue({
+        data: {
+          a: 1,
+          b: 2,
+          c: 3,
+          d: 4,
+          e: {
+            f: {
+              g: 5,
+            },
+          },
+        },
+        watch: {
+          a: function (val, oldVal) {
+            console.log("new: %s, old: %s", val, oldVal);
+          },
+          b: "someMethod()", // 方法名
+          // 该回调会在任何被侦听的对象的 property 改变时被调用，不论其被嵌套多深
+          c: {
+            handler: function (val, oldVal) {},
+            deep: true,
+          },
+          d: {
+            handler: "someMethod()",
+            immediate: true, // 该回调将会在侦听开始之后被立即调用
+          },
+          e: [
+            // 你可以传入回调数组，它们会被逐一调用
+            "handle1()",
+            function handle2(val, oldVal) {},
+            {
+              handler: function handle3(val, oldVal) {},
+              /* ... */
+            },
+          ],
+          // watch vm.e.f's value: {g: 5}
+          "e.f": function (val, oldVal) {},
+        },
+      }); //尝试在控制台中修改以上实例的数据“example.a=1”
+      let vm = new Vue({
+        el: "#app",
+        data: {
+          username: "",
+          tip: "",
+        },
+        methods: {
+          // 模拟调用接口
+          ajaxName(name) {
+            setTimeout(() => {
+              if (name == "李四") {
+                this.tip = "此用户名太受欢迎,请更换一个";
+              } else {
+                this.tip = "用户名可以使用";
+              }
+            }, 3000);
+          },
+        },
+        watch: {
+          //username的值改变时，就会执行如下函数
+          username: function (newval, oldval) {
+            this.tip = "正在验证...";
+            this.ajaxName(newval); //异步
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

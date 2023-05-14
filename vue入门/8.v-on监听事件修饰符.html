@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="https://i.328888.xyz/2023/04/14/ixDL13.jpeg"
+      type="image/png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.css"
+      rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+    <title>8.v-on监听事件修饰符</title>
+  </head>
+  <body>
+    <div class="container">
+      <div id="知识点" class="row">
+        <div class="col-12">
+          <div class="alert alert-secondary" v-html="html1"></div>
+          <div class="alert alert-secondary" v-html="html2"></div>
+          <div class="alert alert-danger">{{tip3}}</div>
+          <div class="alert alert-danger">{{tip4}}</div>
+          <div class="alert alert-secondary">{{html5}}</div>
+          <div class="alert alert-secondary" v-html="html6"></div>
+        </div>
+      </div>
+      <div id="案例" class="row">
+        <div class="col-12">
+          <div class="alert alert-danger" @click="click_fa">
+            <button class="btn btn-outline-danger" @click.stop="click">
+              点击.stop
+            </button>
+            <a href="www.example.com" @click.prevent.stop="click"
+              >跳转链接.prevent.stop</a
+            >
+            <a href="www.example.com" @click.prevent="click"
+              >跳转链接.prevent</a
+            >
+          </div>
+          <div class="alert alert-success" @click.capture="click_fa">
+            <button class="btn btn-outline-success" @click="click">
+              父元素.capture
+            </button>
+          </div>
+          <div class="alert alert-info" @click.self="click_fa">
+            <button class="btn btn-outline-info" @click="click">
+              父元素.self
+            </button>
+            <button class="btn btn-info" @click.once="click">点击.once</button>
+            <button class="btn btn-outline-light" @click.right="click">
+              点击.right
+            </button>
+            <button class="btn btn-outline-primary" @click.middle="click">
+              点击.middle
+            </button>
+          </div>
+          <div class="alert alert-primary">
+            <div class="input-group">
+              <input
+                class="form-control"
+                type="text"
+                @keyup.13="onEnter"
+                placeholder="@keyup.13(回车)触发" />
+              <input
+                class="form-control"
+                type="text"
+                @keyup.enter="onEnter"
+                placeholder="@keyup.enter(回车)触发" />
+              <input
+                class="form-control"
+                type="text"
+                @keyup.delete="onEnter"
+                placeholder="@keyup.delete(删除,退格)触发" />
+              <input
+                class="form-control"
+                type="text"
+                @keyup.a="onEnter"
+                placeholder="@keyup.a触发" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    new Vue({
+      el: "#知识点",
+      data: {
+        html1: `
+    在事件处理程序中调用 event.preventDefault() 或 event.stopPropagation() 是非常常见的需求。尽管我们可以在方法中轻松实现这点，但更好的方式是：方法只有纯粹的数据逻辑，而不是去处理 DOM 事件细节。
+    <br/><br/>
+    为了解决这个问题，Vue.js 为 v-on 提供了事件修饰符。修饰符是由点符号'0.'开头的指令后缀来表示的。
+    <br/><br/>可以多个修饰符一起使用，例如@click.stop.prevent="doThat"`,
+        html2: `
+    <li>**prevent**：阻止默认事件，例如阻止表单提交或者链接跳转。(提交事件不再重载页面)
+    <li>**stop**：阻止事件冒泡，例如阻止点击子元素触发父元素的事件。
+    <li>**once**：事件只触发一次，例如只执行一次点击事件。
+    <li>**capture**：使用事件的捕获模式，即:先触发祖先元素的事件，再触发子元素的事件。
+    <li>**self**：只有event.target是当前操作的元素时才触发事件，即忽略子元素的事件
+    <li>**passive**：用于改善移动端设备的滚动性能，表示不会阻止默认行为。(滚动事件的默认行为 (即滚动行为) 将会立即触发,而不会等待 onScroll 完成,这其中包含 event.preventDefault() 的情况)`,
+        tip3: `使用修饰符时，顺序很重要；相应的代码会以同样的顺序产生。因此，用 v-on:click.prevent.self 会阻止所有的点击，而 v-on:click.self.prevent 只会阻止对元素自身的点击。`,
+        tip4: `不要把 .passive 和 .prevent 一起使用，因为 .prevent 将会被忽略，同时浏览器可能会向你展示一个警告。请记住，.passive 会告诉浏览器你不想阻止事件的默认行为。`,
+        html5: `按键修饰符
+    在监听键盘事件时，我们经常需要检查详细的按键。Vue 允许为 v-on 在监听键盘事件时添加按键修饰符：
+
+    <!-- 只有在 key 是 Enter 时调用 vm.submit() -->
+    <input v-on:keyup.enter="submit">`,
+        html6: `为了在必要的情况下支持旧浏览器，Vue 提供了绝大多数常用的按键码的别名：
+    <li>enter
+    <li>tab
+    <li>delete(捕获“删除”和“退格”键)
+    <li>esc
+    <li>space
+    <li>up
+    <li>down
+    <li>left(鼠标事件中指代左键@click.left仅左键单击时触发)
+    <li>right(鼠标事件中指代右键@click.right仅右键单击时触发)
+    <li>middle(鼠标事件中指代中键@click.middle仅中键单击时触发)`,
+      },
+    });
+    new Vue({
+      el: "#案例",
+      data: { value: "" },
+      methods: {
+        click_fa() {
+          console.log(`父元素被点击`);
+        },
+        click() {
+          console.log(`点击事件触发`);
+        },
+        onEnter() {
+          console.log("指定按键触发");
+        },
+      },
+    });
+  </script>
+  <script>
+    window.onkeyup = (event) => {
+      console.log(event);
+    };
+  </script>
+</html>
